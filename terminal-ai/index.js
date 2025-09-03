@@ -71,19 +71,47 @@ class TerminalAI {
 
   // Configurar API
   async setupAPI() {
-    console.log('\n🔧 Configuração da API necessária:');
-    console.log('1. Groq (Recomendado - Sem censura): https://console.groq.com/');
-    console.log('2. OpenAI: https://platform.openai.com/api-keys');
-    console.log('3. Anthropic: https://console.anthropic.com/');
+    console.log('\n🔧 Configuração da API:');
+    console.log('\n🆓 Provedores Disponíveis:');
+    console.log('1. Groq (Recomendado - Gratuito): https://console.groq.com/');
+    console.log('2. OpenAI ($5 grátis): https://platform.openai.com/api-keys');
+    console.log('3. Anthropic (Créditos limitados): https://console.anthropic.com/');
+    console.log('\n💡 Para problemas de crédito, consulte: CONFIGURACAO_API.md');
 
-    const provider = await this.question('Escolha o provedor (groq/openai/anthropic): ');
+    const provider = await this.question('\nEscolha o provedor (groq/openai/anthropic): ');
+    
+    if (!['groq', 'openai', 'anthropic'].includes(provider.toLowerCase())) {
+      console.log('❌ Provedor inválido. Usando Groq como padrão.');
+      this.config.provider = 'groq';
+    } else {
+      this.config.provider = provider.toLowerCase();
+    }
+
     const apiKey = await this.question('Digite sua chave API: ');
+    
+    if (!apiKey || apiKey.trim().length < 10) {
+      console.log('⚠️  Chave API parece inválida, mas foi salva.');
+    }
 
-    this.config.provider = provider.toLowerCase();
-    this.config.apiKey = apiKey;
+    this.config.apiKey = apiKey.trim();
+    
+    // Ajustar modelo baseado no provedor
+    switch (this.config.provider) {
+      case 'groq':
+        this.config.model = 'mixtral-8x7b-32768';
+        break;
+      case 'openai':
+        this.config.model = 'gpt-3.5-turbo';
+        break;
+      case 'anthropic':
+        this.config.model = 'claude-3-sonnet-20240229';
+        break;
+    }
+
     saveConfig(this.config);
-
     console.log('✅ Configuração salva!');
+    console.log(`🎯 Provedor: ${this.config.provider}`);
+    console.log(`🤖 Modelo: ${this.config.model}`);
   }
 
   // Fazer pergunta
@@ -122,6 +150,11 @@ class TerminalAI {
         this.showConfig();
         break;
 
+      case 'reconfig':
+      case 'setup':
+        await this.setupAPI();
+        break;
+
       case 'history':
         this.showHistory();
         break;
@@ -129,6 +162,11 @@ class TerminalAI {
       case 'reset':
         this.conversationHistory = [];
         console.log('🧹 Histórico limpo!');
+        break;
+
+      case 'docs':
+      case 'api':
+        this.showAPIHelp();
         break;
 
       default:
@@ -149,10 +187,26 @@ class TerminalAI {
     console.log('• help - Mostra esta ajuda');
     console.log('• clear - Limpa a tela');
     console.log('• config - Mostra configuração atual');
+    console.log('• reconfig/setup - Reconfigura a API');
+    console.log('• docs/api - Mostra ajuda da API');
     console.log('• history - Mostra histórico da conversa');
     console.log('• reset - Limpa histórico da conversa');
     console.log('• exit - Sai do programa');
     console.log('• Qualquer outra coisa - Pergunta para a IA\n');
+    console.log('💡 Problemas com crédito? Digite "docs" ou consulte CONFIGURACAO_API.md');
+  }
+
+  // Mostrar ajuda da API
+  showAPIHelp() {
+    console.log('\n🔑 Configuração de API:');
+    console.log('\n🆓 Provedores Gratuitos:');
+    console.log('• Groq: https://console.groq.com/ (Recomendado)');
+    console.log('• OpenAI: https://platform.openai.com/ ($5 grátis)');
+    console.log('• Anthropic: https://console.anthropic.com/');
+    console.log('\n⚡ Comandos úteis:');
+    console.log('• "reconfig" - Reconfigura sua API');
+    console.log('• "config" - Mostra configuração atual');
+    console.log('\n📖 Documentação completa: CONFIGURACAO_API.md\n');
   }
 
   // Mostrar configuração
@@ -215,7 +269,27 @@ class TerminalAI {
 
     } catch (error) {
       spinner.stop();
-      console.log(`❌ Erro: ${error.message}\n`);
+      
+      // Tratamento específico para erros de crédito
+      if (error.message.includes('insufficient_quota') || 
+          error.message.includes('rate_limit') ||
+          error.message.includes('credit') ||
+          error.response?.status === 429) {
+        console.log('\n💳 ❌ Erro de Crédito/Rate Limit:');
+        console.log('🔄 Soluções:');
+        console.log('1. Aguarde alguns minutos e tente novamente');
+        console.log('2. Configure outro provedor (digite "config")');
+        console.log('3. Consulte: CONFIGURACAO_API.md\n');
+      } else if (error.message.includes('unauthorized') || error.response?.status === 401) {
+        console.log('\n🔑 ❌ Erro de Autenticação:');
+        console.log('🔄 Soluções:');
+        console.log('1. Verifique sua chave API (digite "config")');
+        console.log('2. Gere uma nova chave no painel do provedor');
+        console.log('3. Consulte: CONFIGURACAO_API.md\n');
+      } else {
+        console.log(`❌ Erro: ${error.message}`);
+        console.log('💡 Digite "help" para comandos ou consulte CONFIGURACAO_API.md\n');
+      }
     }
   }
 

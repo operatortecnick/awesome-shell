@@ -9,22 +9,35 @@ Uma IA avançada e sem censura que roda diretamente no seu terminal Windows, usa
 - **Interface Interativa**: Terminal limpo e intuitivo
 - **Histórico de Conversa**: Mantém o contexto das conversas
 - **Configuração Flexível**: Personalize temperatura, tokens, etc.
+- **Tratamento de Erros**: Resoluções automáticas para problemas de crédito/API
 
 ## 📋 Pré-requisitos
 
 - Node.js v16 ou superior
 - Chave API de um dos provedores suportados
 
-## 🔧 Instalação
+## ⚡ Instalação Rápida
+
+### Windows (Recomendado)
+```powershell
+# Execute no PowerShell como administrador
+.\setup_terminal_ai.ps1
+```
+
+### Linux/macOS
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+## 🔧 Instalação Manual
 
 1. **Instalar dependências:**
-
    ```bash
    npm install
    ```
 
 2. **Executar a IA:**
-
    ```bash
    node index.js
    ```
@@ -34,9 +47,9 @@ Uma IA avançada e sem censura que roda diretamente no seu terminal Windows, usa
 Na primeira execução, você será solicitado a configurar:
 
 1. **Escolher provedor:**
-   - `groq` (Recomendado - Sem censura)
-   - `openai`
-   - `anthropic`
+   - `groq` (Recomendado - Gratuito, sem censura)
+   - `openai` ($5 grátis para novos usuários)
+   - `anthropic` (Créditos gratuitos limitados)
 
 2. **Inserir chave API:**
    - Groq: <https://console.groq.com/>
@@ -48,6 +61,8 @@ Na primeira execução, você será solicitado a configurar:
 - `help` - Mostra ajuda
 - `clear` - Limpa a tela
 - `config` - Mostra configuração atual
+- `reconfig/setup` - Reconfigura API
+- `docs/api` - Ajuda com configuração de API
 - `history` - Mostra histórico da conversa
 - `reset` - Limpa histórico da conversa
 - `exit` - Sai do programa
@@ -59,9 +74,30 @@ Na primeira execução, você será solicitado a configurar:
 3. Digite suas perguntas normalmente
 4. Use comandos especiais quando necessário
 
+## ⚠️ Solução de Problemas
+
+### Erro: "Créditos insuficientes" / "Rate limit"
+```
+💳 Soluções automáticas:
+1. Aguarde alguns minutos
+2. Digite "reconfig" para trocar provedor
+3. Consulte: ../CONFIGURACAO_API.md
+```
+
+### Erro: "Permission denied" (Windows)
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### Reconfiguração rápida
+```bash
+node index.js
+# Digite: reconfig
+```
+
 ## 🔑 Configuração Manual
 
-Você pode editar o arquivo `.terminal-ai-config.json` na sua pasta home:
+Edite o arquivo `.terminal-ai-config.json` na sua pasta home:
 
 ```json
 {
@@ -88,6 +124,7 @@ Para modificar o código:
 - As configurações são salvas automaticamente
 - Suporte completo para Windows PowerShell e Command Prompt
 - Interface colorida e moderna
+- Tratamento inteligente de erros de API
 
 ## 🔒 Privacidade
 
@@ -98,3 +135,5 @@ Para modificar o código:
 ---
 
 **Desenvolvido com ❤️ para usuários avançados que querem controle total sobre sua IA.**
+
+**💡 Para resolver problemas de crédito/API, consulte: ../CONFIGURACAO_API.md**

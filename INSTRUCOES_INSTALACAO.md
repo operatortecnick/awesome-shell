@@ -21,4 +21,30 @@
 - PowerShell já está instalado
 - Para WSL, execute como administrador: `wsl --install -d Ubuntu`
 
+## 5. IA no Terminal (Terminal AI)
+
+### Instalação Rápida
+```powershell
+# Execute no PowerShell como administrador
+.\setup_terminal_ai.ps1
+```
+
+### Instalação Manual
+```bash
+cd terminal-ai
+npm install
+npm start
+```
+
+### Configuração de API
+- **Problemas com crédito?** Consulte: `CONFIGURACAO_API.md`
+- **Groq (Gratuito)**: https://console.groq.com/
+- **OpenAI ($5 grátis)**: https://platform.openai.com/api-keys
+- **Anthropic**: https://console.anthropic.com/
+
+### Comandos da IA
+- `node index.js` - Iniciar a IA
+- `reconfig` - Reconfigurar API
+- `docs` - Ajuda da API
+
 Reinicie o terminal após as instalações.
