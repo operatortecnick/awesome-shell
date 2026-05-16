@@ -17,62 +17,54 @@
       --accent2:  #ff6584;
       --text:     #e8e8f0;
       --muted:    #8888aa;
-      --radius:   10px;
     }
 
     html, body { height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); }
 
-    /* ── Layout ───────────────────────────────────────── */
     .app {
       display: grid;
       grid-template-rows: 56px 1fr;
       grid-template-columns: 320px 1fr;
-      grid-template-areas:
-        "header header"
-        "sidebar player";
+      grid-template-areas: "header header" "sidebar player";
       height: 100vh;
     }
 
-    /* ── Header ──────────────────────────────────────── */
+    /* ── Header ── */
     header {
       grid-area: header;
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 0 20px;
+      gap: 10px;
+      padding: 0 16px;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       z-index: 10;
+      min-width: 0;
     }
-    header h1 { font-size: 1.1rem; font-weight: 700; letter-spacing: 1px; white-space: nowrap; }
+    header h1 { font-size: 1rem; font-weight: 700; letter-spacing: 1px; white-space: nowrap; flex-shrink: 0; }
     header h1 span { color: var(--accent); }
 
-    .header-controls { display: flex; gap: 8px; align-items: center; margin-left: auto; flex-wrap: wrap; }
+    .hdr-group { display: flex; gap: 6px; align-items: center; }
+    .hdr-group label { font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+    .hdr-right { display: flex; gap: 6px; align-items: center; margin-left: auto; flex-wrap: wrap; }
 
     select, input, button {
       font-family: inherit;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       border-radius: 6px;
       border: 1px solid var(--border);
       background: var(--surface2);
       color: var(--text);
-      padding: 6px 10px;
+      padding: 5px 9px;
       outline: none;
-      transition: border-color .2s;
+      transition: border-color .15s;
     }
     select:focus, input:focus { border-color: var(--accent); }
+    button { background: var(--accent); border-color: var(--accent); cursor: pointer; font-weight: 600; transition: opacity .15s; }
+    button:hover { opacity: .83; }
+    button.sec { background: var(--surface2); border-color: var(--border); color: var(--text); }
 
-    button {
-      background: var(--accent);
-      border-color: var(--accent);
-      cursor: pointer;
-      font-weight: 600;
-      transition: opacity .2s;
-    }
-    button:hover { opacity: .85; }
-    button.secondary { background: var(--surface2); border-color: var(--border); color: var(--text); }
-
-    /* ── Sidebar ──────────────────────────────────────── */
+    /* ── Sidebar ── */
     .sidebar {
       grid-area: sidebar;
       display: flex;
@@ -81,91 +73,67 @@
       border-right: 1px solid var(--border);
       overflow: hidden;
     }
-
     .sidebar-top {
-      padding: 12px;
+      padding: 10px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
       border-bottom: 1px solid var(--border);
     }
-
-    #searchInput {
-      width: 100%;
-      padding: 8px 12px;
-      background: var(--surface2);
-    }
-
+    #searchInput { width: 100%; }
     .filter-row { display: flex; gap: 6px; }
     .filter-row select { flex: 1; min-width: 0; }
 
-    .channel-count {
-      font-size: 0.75rem;
-      color: var(--muted);
-      padding: 6px 12px 0;
-    }
+    .ch-count { font-size: 0.72rem; color: var(--muted); padding: 5px 12px 0; }
 
-    .channel-list {
+    /* Virtual scroll container */
+    .ch-scroll {
       flex: 1;
       overflow-y: auto;
-      scroll-behavior: smooth;
+      position: relative;
     }
-    .channel-list::-webkit-scrollbar { width: 6px; }
-    .channel-list::-webkit-scrollbar-track { background: transparent; }
-    .channel-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .ch-scroll::-webkit-scrollbar { width: 5px; }
+    .ch-scroll::-webkit-scrollbar-track { background: transparent; }
+    .ch-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* height spacer inside .ch-scroll */
+    .vlist-spacer { position: relative; }
 
     .channel-item {
+      position: absolute;
+      left: 0; right: 0;
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 10px 14px;
+      gap: 10px;
+      padding: 0 12px;
       cursor: pointer;
       border-bottom: 1px solid var(--border);
-      transition: background .15s;
+      transition: background .12s;
+      overflow: hidden;
     }
-    .channel-item:hover { background: var(--surface2); }
-    .channel-item.active { background: rgba(108,99,255,.15); border-left: 3px solid var(--accent); }
+    .channel-item:hover  { background: var(--surface2); }
+    .channel-item.active { background: rgba(108,99,255,.18); border-left: 3px solid var(--accent); padding-left: 9px; }
 
-    .channel-logo {
-      width: 40px;
-      height: 30px;
+    .ch-logo {
+      width: 38px; height: 28px;
       object-fit: contain;
       border-radius: 4px;
       background: var(--surface2);
       flex-shrink: 0;
     }
-    .channel-logo-placeholder {
-      width: 40px;
-      height: 30px;
+    .ch-logo-ph {
+      width: 38px; height: 28px;
       background: var(--surface2);
       border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.6rem;
-      color: var(--muted);
-      flex-shrink: 0;
-      text-align: center;
-      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.58rem; color: var(--muted);
+      flex-shrink: 0; text-align: center; overflow: hidden;
     }
+    .ch-info { min-width: 0; }
+    .ch-name { font-size: 0.82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ch-grp  { font-size: 0.68rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    .channel-info { min-width: 0; }
-    .channel-name {
-      font-size: 0.85rem;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .channel-group {
-      font-size: 0.7rem;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* ── Player area ──────────────────────────────────── */
+    /* ── Player ── */
     .player-area {
       grid-area: player;
       display: flex;
@@ -173,7 +141,6 @@
       background: #000;
       overflow: hidden;
     }
-
     .video-wrapper {
       flex: 1;
       position: relative;
@@ -182,156 +149,101 @@
       align-items: center;
       justify-content: center;
     }
-
-    #video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+    #video { width: 100%; height: 100%; object-fit: contain; }
 
     .overlay-msg {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      color: var(--muted);
-      font-size: 1rem;
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px; color: var(--muted);
       pointer-events: none;
     }
-    .overlay-msg svg { width: 64px; height: 64px; opacity: .4; }
-    .overlay-msg p { opacity: .7; }
+    .overlay-msg svg { width: 56px; height: 56px; opacity: .35; }
+    .overlay-msg p { font-size: 0.9rem; opacity: .65; }
 
     .player-bar {
       background: var(--surface);
       border-top: 1px solid var(--border);
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
+      padding: 8px 14px;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
     }
-
     .now-playing { min-width: 0; flex: 1; }
-    .now-playing .np-name { font-weight: 700; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .now-playing .np-url  { font-size: 0.7rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .np-name { font-weight: 700; font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .np-url  { font-size: 0.68rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    .status-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--muted); flex-shrink: 0;
-      box-shadow: 0 0 0 0 rgba(108,99,255,0);
-    }
-    .status-dot.live {
-      background: #4ade80;
-      animation: pulse 1.5s infinite;
-    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+    .status-dot.live  { background: #4ade80; animation: pulse 1.4s infinite; }
     .status-dot.error { background: var(--accent2); }
     @keyframes pulse {
       0%,100% { box-shadow: 0 0 0 0 rgba(74,222,128,.4); }
       50%      { box-shadow: 0 0 0 6px rgba(74,222,128,0); }
     }
 
-    .custom-url-row {
-      display: flex;
-      gap: 8px;
-      padding: 8px 16px;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
+    .custom-row {
+      display: flex; gap: 7px; padding: 7px 14px;
+      background: var(--surface); border-top: 1px solid var(--border);
     }
-    .custom-url-row input { flex: 1; }
+    .custom-row input { flex: 1; }
 
-    /* ── Loading spinner ───────────────────────────────── */
     .spinner {
-      width: 40px; height: 40px;
+      position: absolute;
+      width: 36px; height: 36px;
       border: 3px solid var(--border);
       border-top-color: var(--accent);
       border-radius: 50%;
-      animation: spin .7s linear infinite;
+      animation: spin .65s linear infinite;
       display: none;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── Empty / error states ─────────────────────────── */
     .empty-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 0.85rem;
-      padding: 20px;
-      text-align: center;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      height: 100%; gap: 10px;
+      color: var(--muted); font-size: 0.82rem;
+      padding: 20px; text-align: center;
     }
 
-    /* ── Responsive ───────────────────────────────────── */
-    @media (max-width: 700px) {
+    @media (max-width: 680px) {
       .app {
         grid-template-columns: 1fr;
-        grid-template-rows: 56px 55vh 40px 1fr;
-        grid-template-areas:
-          "header"
-          "player"
-          "player"
-          "sidebar";
+        grid-template-rows: 56px 50vh 1fr;
+        grid-template-areas: "header" "player" "sidebar";
       }
       .sidebar { border-right: none; border-top: 1px solid var(--border); }
+      .hdr-group label { display: none; }
     }
   </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- ── Header ── -->
+  <!-- Header -->
   <header>
     <h1>IPTV<span>·</span>Player</h1>
-    <div class="header-controls">
-      <select id="playlistSelect">
-        <option value="">— Selecionar playlist —</option>
-        <option value="https://iptv-org.github.io/iptv/index.m3u">🌍 Todas as Categorias</option>
-        <option value="https://iptv-org.github.io/iptv/countries/br.m3u">🇧🇷 Brasil</option>
-        <option value="https://iptv-org.github.io/iptv/countries/us.m3u">🇺🇸 Estados Unidos</option>
-        <option value="https://iptv-org.github.io/iptv/countries/pt.m3u">🇵🇹 Portugal</option>
-        <option value="https://iptv-org.github.io/iptv/countries/es.m3u">🇪🇸 Espanha</option>
-        <option value="https://iptv-org.github.io/iptv/countries/ar.m3u">🇦🇷 Argentina</option>
-        <option value="https://iptv-org.github.io/iptv/countries/mx.m3u">🇲🇽 México</option>
-        <option value="https://iptv-org.github.io/iptv/countries/gb.m3u">🇬🇧 Reino Unido</option>
-        <option value="https://iptv-org.github.io/iptv/countries/fr.m3u">🇫🇷 França</option>
-        <option value="https://iptv-org.github.io/iptv/countries/de.m3u">🇩🇪 Alemanha</option>
-        <option value="https://iptv-org.github.io/iptv/countries/it.m3u">🇮🇹 Itália</option>
-        <option value="https://iptv-org.github.io/iptv/countries/jp.m3u">🇯🇵 Japão</option>
-        <option value="https://iptv-org.github.io/iptv/countries/kr.m3u">🇰🇷 Coreia do Sul</option>
-        <option value="https://iptv-org.github.io/iptv/categories/news.m3u">📰 Notícias</option>
-        <option value="https://iptv-org.github.io/iptv/categories/sports.m3u">⚽ Esportes</option>
-        <option value="https://iptv-org.github.io/iptv/categories/movies.m3u">🎬 Filmes</option>
-        <option value="https://iptv-org.github.io/iptv/categories/music.m3u">🎵 Música</option>
-        <option value="https://iptv-org.github.io/iptv/categories/kids.m3u">👶 Infantil</option>
-        <option value="https://iptv-org.github.io/iptv/categories/documentary.m3u">🎥 Documentários</option>
-      </select>
-      <button id="loadBtn">Carregar</button>
+    <div class="hdr-right">
+      <div class="hdr-group">
+        <label>Playlist:</label>
+        <select id="playlistSelect" style="max-width:240px"></select>
+      </div>
     </div>
   </header>
 
-  <!-- ── Sidebar ── -->
+  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-top">
-      <input id="searchInput" type="search" placeholder="🔍 Buscar canal..." />
+      <input id="searchInput" type="search" placeholder="🔍 Buscar canal…" />
       <div class="filter-row">
         <select id="groupFilter"><option value="">Todos os grupos</option></select>
       </div>
     </div>
-    <div class="channel-count" id="channelCount"></div>
-    <div class="channel-list" id="channelList">
-      <div class="empty-state">
-        <p>Selecione uma playlist acima<br>ou cole uma URL M3U personalizada</p>
-      </div>
+    <div class="ch-count" id="chCount"></div>
+    <div class="ch-scroll" id="chScroll">
+      <div class="empty-state">Selecione uma playlist no topo</div>
     </div>
   </aside>
 
-  <!-- ── Player ── -->
+  <!-- Player -->
   <main class="player-area">
     <div class="video-wrapper">
       <video id="video" controls playsinline></video>
@@ -352,256 +264,516 @@
       </div>
     </div>
 
-    <div class="custom-url-row">
-      <input id="customUrl" type="url" placeholder="Cole uma URL M3U personalizada aqui..." />
-      <button id="loadCustomBtn" class="secondary">Carregar M3U</button>
-      <input id="streamUrl" type="url" placeholder="Ou cole diretamente uma URL de stream (.m3u8, .ts)..." />
-      <button id="playStreamBtn" class="secondary">▶ Play</button>
+    <div class="custom-row">
+      <input id="customUrl" type="url" placeholder="Cole uma URL de playlist M3U…" />
+      <button id="loadCustomBtn" class="sec">Carregar M3U</button>
+      <input id="streamUrl" type="url" placeholder="URL direta de stream (.m3u8 / .ts)…" />
+      <button id="playStreamBtn" class="sec">▶ Play</button>
     </div>
   </main>
 
 </div>
-
 <script>
-  /* ── State ─────────────────────────────────────────── */
-  let channels = [];
-  let filtered = [];
-  let hls = null;
-  let activeIdx = -1;
+/* ─── Playlist catalogue ──────────────────────────────────────────── */
+const PLAYLISTS = [
+  { label: '━━ COMPLETO ━━', disabled: true },
+  { label: '🌐 Todos os Canais (index)', url: 'https://iptv-org.github.io/iptv/index.m3u' },
+  { label: '━━ CATEGORIAS ━━', disabled: true },
+  { label: '🚗 Automóveis',      url: 'https://iptv-org.github.io/iptv/categories/auto.m3u' },
+  { label: '💼 Negócios',        url: 'https://iptv-org.github.io/iptv/categories/business.m3u' },
+  { label: '📺 Clássicos',       url: 'https://iptv-org.github.io/iptv/categories/classic.m3u' },
+  { label: '😂 Comédia',         url: 'https://iptv-org.github.io/iptv/categories/comedy.m3u' },
+  { label: '🍳 Culinária',       url: 'https://iptv-org.github.io/iptv/categories/cooking.m3u' },
+  { label: '🎭 Cultura',         url: 'https://iptv-org.github.io/iptv/categories/culture.m3u' },
+  { label: '🎥 Documentários',   url: 'https://iptv-org.github.io/iptv/categories/documentary.m3u' },
+  { label: '📚 Educação',        url: 'https://iptv-org.github.io/iptv/categories/education.m3u' },
+  { label: '🎉 Entretenimento',  url: 'https://iptv-org.github.io/iptv/categories/entertainment.m3u' },
+  { label: '👨‍👩‍👧 Família',         url: 'https://iptv-org.github.io/iptv/categories/family.m3u' },
+  { label: '📡 Geral',           url: 'https://iptv-org.github.io/iptv/categories/general.m3u' },
+  { label: '👶 Infantil',        url: 'https://iptv-org.github.io/iptv/categories/kids.m3u' },
+  { label: '⚖️ Legislativo',     url: 'https://iptv-org.github.io/iptv/categories/legislative.m3u' },
+  { label: '🌟 Lifestyle',       url: 'https://iptv-org.github.io/iptv/categories/lifestyle.m3u' },
+  { label: '📍 Local',           url: 'https://iptv-org.github.io/iptv/categories/local.m3u' },
+  { label: '🎬 Filmes',          url: 'https://iptv-org.github.io/iptv/categories/movies.m3u' },
+  { label: '🎵 Música',          url: 'https://iptv-org.github.io/iptv/categories/music.m3u' },
+  { label: '📰 Notícias',        url: 'https://iptv-org.github.io/iptv/categories/news.m3u' },
+  { label: '🏕️ Outdoor',         url: 'https://iptv-org.github.io/iptv/categories/outdoor.m3u' },
+  { label: '😌 Relaxamento',     url: 'https://iptv-org.github.io/iptv/categories/relax.m3u' },
+  { label: '🙏 Religioso',       url: 'https://iptv-org.github.io/iptv/categories/religious.m3u' },
+  { label: '📺 Séries',          url: 'https://iptv-org.github.io/iptv/categories/series.m3u' },
+  { label: '🛍️ Shopping',        url: 'https://iptv-org.github.io/iptv/categories/shop.m3u' },
+  { label: '⚽ Esportes',        url: 'https://iptv-org.github.io/iptv/categories/sports.m3u' },
+  { label: '✈️ Viagem',          url: 'https://iptv-org.github.io/iptv/categories/travel.m3u' },
+  { label: '🌤️ Clima',           url: 'https://iptv-org.github.io/iptv/categories/weather.m3u' },
+  { label: '━━ PAÍSES ━━', disabled: true },
+  { label: '🇦🇫 Afeganistão',     url: 'https://iptv-org.github.io/iptv/countries/af.m3u' },
+  { label: '🇿🇦 África do Sul',   url: 'https://iptv-org.github.io/iptv/countries/za.m3u' },
+  { label: '🇦🇱 Albânia',         url: 'https://iptv-org.github.io/iptv/countries/al.m3u' },
+  { label: '🇩🇪 Alemanha',        url: 'https://iptv-org.github.io/iptv/countries/de.m3u' },
+  { label: '🇦🇩 Andorra',         url: 'https://iptv-org.github.io/iptv/countries/ad.m3u' },
+  { label: '🇦🇴 Angola',          url: 'https://iptv-org.github.io/iptv/countries/ao.m3u' },
+  { label: '🇦🇬 Antígua e Barbuda', url: 'https://iptv-org.github.io/iptv/countries/ag.m3u' },
+  { label: '🇸🇦 Arábia Saudita',  url: 'https://iptv-org.github.io/iptv/countries/sa.m3u' },
+  { label: '🇩🇿 Argélia',         url: 'https://iptv-org.github.io/iptv/countries/dz.m3u' },
+  { label: '🇦🇷 Argentina',       url: 'https://iptv-org.github.io/iptv/countries/ar.m3u' },
+  { label: '🇦🇲 Armênia',         url: 'https://iptv-org.github.io/iptv/countries/am.m3u' },
+  { label: '🇦🇼 Aruba',           url: 'https://iptv-org.github.io/iptv/countries/aw.m3u' },
+  { label: '🇦🇺 Austrália',       url: 'https://iptv-org.github.io/iptv/countries/au.m3u' },
+  { label: '🇦🇹 Áustria',         url: 'https://iptv-org.github.io/iptv/countries/at.m3u' },
+  { label: '🇦🇿 Azerbaijão',      url: 'https://iptv-org.github.io/iptv/countries/az.m3u' },
+  { label: '🇧🇸 Bahamas',         url: 'https://iptv-org.github.io/iptv/countries/bs.m3u' },
+  { label: '🇧🇭 Bahrein',         url: 'https://iptv-org.github.io/iptv/countries/bh.m3u' },
+  { label: '🇧🇩 Bangladesh',      url: 'https://iptv-org.github.io/iptv/countries/bd.m3u' },
+  { label: '🇧🇧 Barbados',        url: 'https://iptv-org.github.io/iptv/countries/bb.m3u' },
+  { label: '🇧🇾 Bielorrússia',    url: 'https://iptv-org.github.io/iptv/countries/by.m3u' },
+  { label: '🇧🇪 Bélgica',         url: 'https://iptv-org.github.io/iptv/countries/be.m3u' },
+  { label: '🇧🇿 Belize',          url: 'https://iptv-org.github.io/iptv/countries/bz.m3u' },
+  { label: '🇧🇯 Benin',           url: 'https://iptv-org.github.io/iptv/countries/bj.m3u' },
+  { label: '🇧🇴 Bolívia',         url: 'https://iptv-org.github.io/iptv/countries/bo.m3u' },
+  { label: '🇧🇦 Bósnia e Herzegovina', url: 'https://iptv-org.github.io/iptv/countries/ba.m3u' },
+  { label: '🇧🇼 Botswana',        url: 'https://iptv-org.github.io/iptv/countries/bw.m3u' },
+  { label: '🇧🇷 Brasil',          url: 'https://iptv-org.github.io/iptv/countries/br.m3u' },
+  { label: '🇧🇳 Brunei',          url: 'https://iptv-org.github.io/iptv/countries/bn.m3u' },
+  { label: '🇧🇬 Bulgária',        url: 'https://iptv-org.github.io/iptv/countries/bg.m3u' },
+  { label: '🇧🇫 Burkina Faso',    url: 'https://iptv-org.github.io/iptv/countries/bf.m3u' },
+  { label: '🇧🇮 Burundi',         url: 'https://iptv-org.github.io/iptv/countries/bi.m3u' },
+  { label: '🇨🇻 Cabo Verde',      url: 'https://iptv-org.github.io/iptv/countries/cv.m3u' },
+  { label: '🇰🇭 Camboja',         url: 'https://iptv-org.github.io/iptv/countries/kh.m3u' },
+  { label: '🇨🇲 Camarões',        url: 'https://iptv-org.github.io/iptv/countries/cm.m3u' },
+  { label: '🇨🇦 Canadá',          url: 'https://iptv-org.github.io/iptv/countries/ca.m3u' },
+  { label: '🇰🇿 Cazaquistão',     url: 'https://iptv-org.github.io/iptv/countries/kz.m3u' },
+  { label: '🇹🇩 Chade',           url: 'https://iptv-org.github.io/iptv/countries/td.m3u' },
+  { label: '🇨🇱 Chile',           url: 'https://iptv-org.github.io/iptv/countries/cl.m3u' },
+  { label: '🇨🇳 China',           url: 'https://iptv-org.github.io/iptv/countries/cn.m3u' },
+  { label: '🇨🇾 Chipre',          url: 'https://iptv-org.github.io/iptv/countries/cy.m3u' },
+  { label: '🇨🇴 Colômbia',        url: 'https://iptv-org.github.io/iptv/countries/co.m3u' },
+  { label: '🇰🇲 Comores',         url: 'https://iptv-org.github.io/iptv/countries/km.m3u' },
+  { label: '🇰🇵 Coreia do Norte', url: 'https://iptv-org.github.io/iptv/countries/kp.m3u' },
+  { label: '🇰🇷 Coreia do Sul',   url: 'https://iptv-org.github.io/iptv/countries/kr.m3u' },
+  { label: '🇨🇮 Costa do Marfim', url: 'https://iptv-org.github.io/iptv/countries/ci.m3u' },
+  { label: '🇨🇷 Costa Rica',      url: 'https://iptv-org.github.io/iptv/countries/cr.m3u' },
+  { label: '🇭🇷 Croácia',         url: 'https://iptv-org.github.io/iptv/countries/hr.m3u' },
+  { label: '🇨🇺 Cuba',            url: 'https://iptv-org.github.io/iptv/countries/cu.m3u' },
+  { label: '🇨🇿 República Tcheca',url: 'https://iptv-org.github.io/iptv/countries/cz.m3u' },
+  { label: '🇩🇰 Dinamarca',       url: 'https://iptv-org.github.io/iptv/countries/dk.m3u' },
+  { label: '🇩🇯 Djibuti',         url: 'https://iptv-org.github.io/iptv/countries/dj.m3u' },
+  { label: '🇩🇴 Rep. Dominicana', url: 'https://iptv-org.github.io/iptv/countries/do.m3u' },
+  { label: '🇪🇨 Equador',         url: 'https://iptv-org.github.io/iptv/countries/ec.m3u' },
+  { label: '🇪🇬 Egito',           url: 'https://iptv-org.github.io/iptv/countries/eg.m3u' },
+  { label: '🇸🇻 El Salvador',     url: 'https://iptv-org.github.io/iptv/countries/sv.m3u' },
+  { label: '🇦🇪 Emirados Árabes', url: 'https://iptv-org.github.io/iptv/countries/ae.m3u' },
+  { label: '🇪🇷 Eritreia',        url: 'https://iptv-org.github.io/iptv/countries/er.m3u' },
+  { label: '🇸🇰 Eslováquia',      url: 'https://iptv-org.github.io/iptv/countries/sk.m3u' },
+  { label: '🇸🇮 Eslovênia',       url: 'https://iptv-org.github.io/iptv/countries/si.m3u' },
+  { label: '🇪🇸 Espanha',         url: 'https://iptv-org.github.io/iptv/countries/es.m3u' },
+  { label: '🇪🇪 Estônia',         url: 'https://iptv-org.github.io/iptv/countries/ee.m3u' },
+  { label: '🇪🇹 Etiópia',         url: 'https://iptv-org.github.io/iptv/countries/et.m3u' },
+  { label: '🇫🇯 Fiji',            url: 'https://iptv-org.github.io/iptv/countries/fj.m3u' },
+  { label: '🇵🇭 Filipinas',       url: 'https://iptv-org.github.io/iptv/countries/ph.m3u' },
+  { label: '🇫🇮 Finlândia',       url: 'https://iptv-org.github.io/iptv/countries/fi.m3u' },
+  { label: '🇫🇷 França',          url: 'https://iptv-org.github.io/iptv/countries/fr.m3u' },
+  { label: '🇬🇦 Gabão',           url: 'https://iptv-org.github.io/iptv/countries/ga.m3u' },
+  { label: '🇬🇲 Gâmbia',          url: 'https://iptv-org.github.io/iptv/countries/gm.m3u' },
+  { label: '🇬🇭 Gana',            url: 'https://iptv-org.github.io/iptv/countries/gh.m3u' },
+  { label: '🇬🇪 Geórgia',         url: 'https://iptv-org.github.io/iptv/countries/ge.m3u' },
+  { label: '🇬🇮 Gibraltar',       url: 'https://iptv-org.github.io/iptv/countries/gi.m3u' },
+  { label: '🇬🇷 Grécia',          url: 'https://iptv-org.github.io/iptv/countries/gr.m3u' },
+  { label: '🇬🇹 Guatemala',       url: 'https://iptv-org.github.io/iptv/countries/gt.m3u' },
+  { label: '🇬🇳 Guiné',           url: 'https://iptv-org.github.io/iptv/countries/gn.m3u' },
+  { label: '🇬🇼 Guiné-Bissau',    url: 'https://iptv-org.github.io/iptv/countries/gw.m3u' },
+  { label: '🇬🇶 Guiné Equatorial',url: 'https://iptv-org.github.io/iptv/countries/gq.m3u' },
+  { label: '🇬🇾 Guiana',          url: 'https://iptv-org.github.io/iptv/countries/gy.m3u' },
+  { label: '🇭🇹 Haiti',           url: 'https://iptv-org.github.io/iptv/countries/ht.m3u' },
+  { label: '🇭🇳 Honduras',        url: 'https://iptv-org.github.io/iptv/countries/hn.m3u' },
+  { label: '🇭🇰 Hong Kong',       url: 'https://iptv-org.github.io/iptv/countries/hk.m3u' },
+  { label: '🇭🇺 Hungria',         url: 'https://iptv-org.github.io/iptv/countries/hu.m3u' },
+  { label: '🇾🇪 Iêmen',           url: 'https://iptv-org.github.io/iptv/countries/ye.m3u' },
+  { label: '🇮🇳 Índia',           url: 'https://iptv-org.github.io/iptv/countries/in.m3u' },
+  { label: '🇮🇩 Indonésia',       url: 'https://iptv-org.github.io/iptv/countries/id.m3u' },
+  { label: '🇮🇷 Irã',             url: 'https://iptv-org.github.io/iptv/countries/ir.m3u' },
+  { label: '🇮🇶 Iraque',          url: 'https://iptv-org.github.io/iptv/countries/iq.m3u' },
+  { label: '🇮🇪 Irlanda',         url: 'https://iptv-org.github.io/iptv/countries/ie.m3u' },
+  { label: '🇮🇸 Islândia',        url: 'https://iptv-org.github.io/iptv/countries/is.m3u' },
+  { label: '🇮🇱 Israel',          url: 'https://iptv-org.github.io/iptv/countries/il.m3u' },
+  { label: '🇮🇹 Itália',          url: 'https://iptv-org.github.io/iptv/countries/it.m3u' },
+  { label: '🇯🇲 Jamaica',         url: 'https://iptv-org.github.io/iptv/countries/jm.m3u' },
+  { label: '🇯🇵 Japão',           url: 'https://iptv-org.github.io/iptv/countries/jp.m3u' },
+  { label: '🇯🇴 Jordânia',        url: 'https://iptv-org.github.io/iptv/countries/jo.m3u' },
+  { label: '🇽🇰 Kosovo',          url: 'https://iptv-org.github.io/iptv/countries/xk.m3u' },
+  { label: '🇰🇼 Kuwait',          url: 'https://iptv-org.github.io/iptv/countries/kw.m3u' },
+  { label: '🇰🇬 Quirguistão',     url: 'https://iptv-org.github.io/iptv/countries/kg.m3u' },
+  { label: '🇱🇦 Laos',            url: 'https://iptv-org.github.io/iptv/countries/la.m3u' },
+  { label: '🇱🇸 Lesoto',          url: 'https://iptv-org.github.io/iptv/countries/ls.m3u' },
+  { label: '🇱🇻 Letônia',         url: 'https://iptv-org.github.io/iptv/countries/lv.m3u' },
+  { label: '🇱🇧 Líbano',          url: 'https://iptv-org.github.io/iptv/countries/lb.m3u' },
+  { label: '🇱🇾 Líbia',           url: 'https://iptv-org.github.io/iptv/countries/ly.m3u' },
+  { label: '🇱🇮 Liechtenstein',   url: 'https://iptv-org.github.io/iptv/countries/li.m3u' },
+  { label: '🇱🇹 Lituânia',        url: 'https://iptv-org.github.io/iptv/countries/lt.m3u' },
+  { label: '🇱🇺 Luxemburgo',      url: 'https://iptv-org.github.io/iptv/countries/lu.m3u' },
+  { label: '🇲🇴 Macau',           url: 'https://iptv-org.github.io/iptv/countries/mo.m3u' },
+  { label: '🇲🇰 Macedônia do Norte', url: 'https://iptv-org.github.io/iptv/countries/mk.m3u' },
+  { label: '🇲🇬 Madagascar',      url: 'https://iptv-org.github.io/iptv/countries/mg.m3u' },
+  { label: '🇲🇼 Malawi',          url: 'https://iptv-org.github.io/iptv/countries/mw.m3u' },
+  { label: '🇲🇾 Malásia',         url: 'https://iptv-org.github.io/iptv/countries/my.m3u' },
+  { label: '🇲🇻 Maldivas',        url: 'https://iptv-org.github.io/iptv/countries/mv.m3u' },
+  { label: '🇲🇱 Mali',            url: 'https://iptv-org.github.io/iptv/countries/ml.m3u' },
+  { label: '🇲🇹 Malta',           url: 'https://iptv-org.github.io/iptv/countries/mt.m3u' },
+  { label: '🇲🇦 Marrocos',        url: 'https://iptv-org.github.io/iptv/countries/ma.m3u' },
+  { label: '🇲🇷 Mauritânia',      url: 'https://iptv-org.github.io/iptv/countries/mr.m3u' },
+  { label: '🇲🇺 Maurício',        url: 'https://iptv-org.github.io/iptv/countries/mu.m3u' },
+  { label: '🇲🇽 México',          url: 'https://iptv-org.github.io/iptv/countries/mx.m3u' },
+  { label: '🇲🇿 Moçambique',      url: 'https://iptv-org.github.io/iptv/countries/mz.m3u' },
+  { label: '🇲🇩 Moldávia',        url: 'https://iptv-org.github.io/iptv/countries/md.m3u' },
+  { label: '🇲🇨 Mônaco',          url: 'https://iptv-org.github.io/iptv/countries/mc.m3u' },
+  { label: '🇲🇳 Mongólia',        url: 'https://iptv-org.github.io/iptv/countries/mn.m3u' },
+  { label: '🇲🇪 Montenegro',      url: 'https://iptv-org.github.io/iptv/countries/me.m3u' },
+  { label: '🇲🇲 Myanmar',         url: 'https://iptv-org.github.io/iptv/countries/mm.m3u' },
+  { label: '🇳🇦 Namíbia',         url: 'https://iptv-org.github.io/iptv/countries/na.m3u' },
+  { label: '🇳🇵 Nepal',           url: 'https://iptv-org.github.io/iptv/countries/np.m3u' },
+  { label: '🇳🇮 Nicarágua',       url: 'https://iptv-org.github.io/iptv/countries/ni.m3u' },
+  { label: '🇳🇪 Níger',           url: 'https://iptv-org.github.io/iptv/countries/ne.m3u' },
+  { label: '🇳🇬 Nigéria',         url: 'https://iptv-org.github.io/iptv/countries/ng.m3u' },
+  { label: '🇳🇴 Noruega',         url: 'https://iptv-org.github.io/iptv/countries/no.m3u' },
+  { label: '🇳🇿 Nova Zelândia',   url: 'https://iptv-org.github.io/iptv/countries/nz.m3u' },
+  { label: '🇴🇲 Omã',             url: 'https://iptv-org.github.io/iptv/countries/om.m3u' },
+  { label: '🇳🇱 Países Baixos',   url: 'https://iptv-org.github.io/iptv/countries/nl.m3u' },
+  { label: '🇵🇰 Paquistão',       url: 'https://iptv-org.github.io/iptv/countries/pk.m3u' },
+  { label: '🇵🇼 Palau',           url: 'https://iptv-org.github.io/iptv/countries/pw.m3u' },
+  { label: '🇵🇸 Palestina',       url: 'https://iptv-org.github.io/iptv/countries/ps.m3u' },
+  { label: '🇵🇦 Panamá',          url: 'https://iptv-org.github.io/iptv/countries/pa.m3u' },
+  { label: '🇵🇬 Papua Nova Guiné',url: 'https://iptv-org.github.io/iptv/countries/pg.m3u' },
+  { label: '🇵🇾 Paraguai',        url: 'https://iptv-org.github.io/iptv/countries/py.m3u' },
+  { label: '🇵🇪 Peru',            url: 'https://iptv-org.github.io/iptv/countries/pe.m3u' },
+  { label: '🇵🇱 Polônia',         url: 'https://iptv-org.github.io/iptv/countries/pl.m3u' },
+  { label: '🇵🇹 Portugal',        url: 'https://iptv-org.github.io/iptv/countries/pt.m3u' },
+  { label: '🇶🇦 Qatar',           url: 'https://iptv-org.github.io/iptv/countries/qa.m3u' },
+  { label: '🇰🇪 Quênia',          url: 'https://iptv-org.github.io/iptv/countries/ke.m3u' },
+  { label: '🇬🇧 Reino Unido',     url: 'https://iptv-org.github.io/iptv/countries/gb.m3u' },
+  { label: '🇨🇬 Rep. do Congo',   url: 'https://iptv-org.github.io/iptv/countries/cg.m3u' },
+  { label: '🇨🇩 Rep. Dem. Congo', url: 'https://iptv-org.github.io/iptv/countries/cd.m3u' },
+  { label: '🇷🇴 Romênia',         url: 'https://iptv-org.github.io/iptv/countries/ro.m3u' },
+  { label: '🇷🇼 Ruanda',          url: 'https://iptv-org.github.io/iptv/countries/rw.m3u' },
+  { label: '🇷🇺 Rússia',          url: 'https://iptv-org.github.io/iptv/countries/ru.m3u' },
+  { label: '🇸🇲 San Marino',      url: 'https://iptv-org.github.io/iptv/countries/sm.m3u' },
+  { label: '🇸🇳 Senegal',         url: 'https://iptv-org.github.io/iptv/countries/sn.m3u' },
+  { label: '🇸🇱 Serra Leoa',      url: 'https://iptv-org.github.io/iptv/countries/sl.m3u' },
+  { label: '🇷🇸 Sérvia',          url: 'https://iptv-org.github.io/iptv/countries/rs.m3u' },
+  { label: '🇸🇬 Singapura',       url: 'https://iptv-org.github.io/iptv/countries/sg.m3u' },
+  { label: '🇸🇴 Somália',         url: 'https://iptv-org.github.io/iptv/countries/so.m3u' },
+  { label: '🇱🇰 Sri Lanka',       url: 'https://iptv-org.github.io/iptv/countries/lk.m3u' },
+  { label: '🇸🇩 Sudão',           url: 'https://iptv-org.github.io/iptv/countries/sd.m3u' },
+  { label: '🇸🇸 Sudão do Sul',    url: 'https://iptv-org.github.io/iptv/countries/ss.m3u' },
+  { label: '🇸🇪 Suécia',          url: 'https://iptv-org.github.io/iptv/countries/se.m3u' },
+  { label: '🇨🇭 Suíça',           url: 'https://iptv-org.github.io/iptv/countries/ch.m3u' },
+  { label: '🇸🇷 Suriname',        url: 'https://iptv-org.github.io/iptv/countries/sr.m3u' },
+  { label: '🇸🇾 Síria',           url: 'https://iptv-org.github.io/iptv/countries/sy.m3u' },
+  { label: '🇹🇯 Tajiquistão',     url: 'https://iptv-org.github.io/iptv/countries/tj.m3u' },
+  { label: '🇹🇿 Tanzânia',        url: 'https://iptv-org.github.io/iptv/countries/tz.m3u' },
+  { label: '🇹🇭 Tailândia',       url: 'https://iptv-org.github.io/iptv/countries/th.m3u' },
+  { label: '🇹🇱 Timor-Leste',     url: 'https://iptv-org.github.io/iptv/countries/tl.m3u' },
+  { label: '🇹🇬 Togo',            url: 'https://iptv-org.github.io/iptv/countries/tg.m3u' },
+  { label: '🇹🇹 Trinidad e Tobago', url: 'https://iptv-org.github.io/iptv/countries/tt.m3u' },
+  { label: '🇹🇳 Tunísia',         url: 'https://iptv-org.github.io/iptv/countries/tn.m3u' },
+  { label: '🇹🇲 Turcomenistão',   url: 'https://iptv-org.github.io/iptv/countries/tm.m3u' },
+  { label: '🇹🇷 Turquia',         url: 'https://iptv-org.github.io/iptv/countries/tr.m3u' },
+  { label: '🇺🇬 Uganda',          url: 'https://iptv-org.github.io/iptv/countries/ug.m3u' },
+  { label: '🇺🇦 Ucrânia',         url: 'https://iptv-org.github.io/iptv/countries/ua.m3u' },
+  { label: '🇺🇾 Uruguai',         url: 'https://iptv-org.github.io/iptv/countries/uy.m3u' },
+  { label: '🇺🇿 Uzbequistão',     url: 'https://iptv-org.github.io/iptv/countries/uz.m3u' },
+  { label: '🇻🇪 Venezuela',       url: 'https://iptv-org.github.io/iptv/countries/ve.m3u' },
+  { label: '🇻🇳 Vietnã',          url: 'https://iptv-org.github.io/iptv/countries/vn.m3u' },
+  { label: '🇿🇲 Zâmbia',          url: 'https://iptv-org.github.io/iptv/countries/zm.m3u' },
+  { label: '🇿🇼 Zimbábue',        url: 'https://iptv-org.github.io/iptv/countries/zw.m3u' },
+  { label: '🇺🇸 Estados Unidos',  url: 'https://iptv-org.github.io/iptv/countries/us.m3u' },
+];
 
-  /* ── DOM refs ──────────────────────────────────────── */
-  const video       = document.getElementById('video');
-  const channelList = document.getElementById('channelList');
-  const searchInput = document.getElementById('searchInput');
-  const groupFilter = document.getElementById('groupFilter');
-  const channelCount= document.getElementById('channelCount');
-  const overlayMsg  = document.getElementById('overlayMsg');
-  const spinner     = document.getElementById('spinner');
-  const statusDot   = document.getElementById('statusDot');
-  const npName      = document.getElementById('npName');
-  const npUrl       = document.getElementById('npUrl');
-  const playlistSel = document.getElementById('playlistSelect');
-  const loadBtn     = document.getElementById('loadBtn');
-  const customUrl   = document.getElementById('customUrl');
-  const loadCustom  = document.getElementById('loadCustomBtn');
-  const streamUrl   = document.getElementById('streamUrl');
-  const playStream  = document.getElementById('playStreamBtn');
+/* ─── Build select ────────────────────────────────────────────────── */
+const playlistSel = document.getElementById('playlistSelect');
+PLAYLISTS.forEach(p => {
+  const o = document.createElement('option');
+  o.textContent = p.label;
+  if (p.disabled) { o.disabled = true; o.style.color = '#666'; o.style.fontWeight = 'bold'; }
+  else o.value = p.url;
+  playlistSel.appendChild(o);
+});
 
-  /* ── M3U parser ────────────────────────────────────── */
-  function parseM3U(text) {
-    const lines = text.split(/\r?\n/);
-    const result = [];
-    let current = null;
+/* ─── State ───────────────────────────────────────────────────────── */
+let channels   = [];
+let filtered   = [];
+let hls        = null;
+let activeIdx  = -1;   // index into filtered[]
+let searchTimer = null;
 
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-      if (!line) continue;
+const ITEM_H = 56; // px — fixed row height for virtual list
 
-      if (line.startsWith('#EXTINF')) {
-        current = { name: '', logo: '', group: '', url: '' };
-        const nameMatch = line.match(/,(.+)$/);
-        if (nameMatch) current.name = nameMatch[1].trim();
+/* ─── DOM refs ────────────────────────────────────────────────────── */
+const video       = document.getElementById('video');
+const chScroll    = document.getElementById('chScroll');
+const searchInput = document.getElementById('searchInput');
+const groupFilter = document.getElementById('groupFilter');
+const chCount     = document.getElementById('chCount');
+const overlayMsg  = document.getElementById('overlayMsg');
+const spinner     = document.getElementById('spinner');
+const statusDot   = document.getElementById('statusDot');
+const npName      = document.getElementById('npName');
+const npUrl       = document.getElementById('npUrl');
+const customUrl   = document.getElementById('customUrl');
+const loadCustom  = document.getElementById('loadCustomBtn');
+const streamUrl   = document.getElementById('streamUrl');
+const playStream  = document.getElementById('playStreamBtn');
 
-        const logoMatch = line.match(/tvg-logo="([^"]*)"/i);
-        if (logoMatch) current.logo = logoMatch[1];
-
-        const groupMatch = line.match(/group-title="([^"]*)"/i);
-        if (groupMatch) current.group = groupMatch[1];
-
-        const nameTag = line.match(/tvg-name="([^"]*)"/i);
-        if (nameTag && !current.name) current.name = nameTag[1];
-
-      } else if (line.startsWith('#')) {
-        // skip other directives
-      } else if (current) {
-        current.url = line;
-        if (current.name || current.url) result.push(current);
-        current = null;
-      }
+/* ─── M3U parser ──────────────────────────────────────────────────── */
+function parseM3U(text) {
+  const lines  = text.split(/\r?\n/);
+  const result = [];
+  let cur = null;
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line) continue;
+    if (line.startsWith('#EXTINF')) {
+      cur = { name: '', logo: '', group: '', url: '' };
+      const nm = line.match(/,(.+)$/);      if (nm) cur.name = nm[1].trim();
+      const lg = line.match(/tvg-logo="([^"]*)"/i);   if (lg) cur.logo  = lg[1];
+      const gr = line.match(/group-title="([^"]*)"/i); if (gr) cur.group = gr[1];
+      const tn = line.match(/tvg-name="([^"]*)"/i);
+      if (tn && !cur.name) cur.name = tn[1];
+    } else if (line.startsWith('#')) {
+      /* skip */
+    } else if (cur) {
+      cur.url = line;
+      if (cur.name || cur.url) result.push(cur);
+      cur = null;
     }
-    return result;
   }
+  return result;
+}
 
-  /* ── Load playlist ─────────────────────────────────── */
-  async function loadPlaylist(url) {
-    setStatus('loading');
-    channelList.innerHTML = '<div class="empty-state"><div class="spinner" style="display:block;margin:auto"></div><p style="margin-top:14px">Carregando canais…</p></div>';
-    channelCount.textContent = '';
+/* ─── Load playlist ───────────────────────────────────────────────── */
+async function loadPlaylist(url) {
+  setStatus('loading');
+  chScroll.innerHTML = '<div class="empty-state"><div class="spinner" style="display:block;margin:auto"></div><p style="margin-top:14px">Carregando canais…</p></div>';
+  chCount.textContent = '';
 
-    try {
-      // Try with a CORS proxy first, then direct
-      let text = '';
-      const proxies = [
-        `https://corsproxy.io/?${encodeURIComponent(url)}`,
-        `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-        url,
-      ];
-
-      for (const src of proxies) {
-        try {
-          const res = await fetch(src, { signal: AbortSignal.timeout(15000) });
-          if (res.ok) { text = await res.text(); break; }
-        } catch { /* try next */ }
-      }
-
-      if (!text) throw new Error('Não foi possível carregar a playlist. Verifique a URL ou sua conexão.');
-
-      channels = parseM3U(text);
-      if (!channels.length) throw new Error('Nenhum canal encontrado na playlist.');
-
-      populateGroups();
-      applyFilters();
-      setStatus('idle');
-    } catch (err) {
-      channelList.innerHTML = `<div class="empty-state">⚠️ ${err.message}</div>`;
-      setStatus('idle');
+  try {
+    let text = '';
+    const proxies = [
+      `https://corsproxy.io/?${encodeURIComponent(url)}`,
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+      url,
+    ];
+    for (const src of proxies) {
+      try {
+        const res = await fetch(src, { signal: AbortSignal.timeout(20000) });
+        if (res.ok) { text = await res.text(); break; }
+      } catch { /* next proxy */ }
     }
+    if (!text) throw new Error('Não foi possível carregar a playlist. Verifique a URL ou sua conexão.');
+
+    channels = parseM3U(text);
+    if (!channels.length) throw new Error('Nenhum canal encontrado na playlist.');
+
+    activeIdx = -1;
+    populateGroups();
+    searchInput.value = '';
+    groupFilter.value = '';
+    applyFilters();
+    setStatus('idle');
+  } catch (err) {
+    chScroll.innerHTML = `<div class="empty-state">⚠️ ${esc(err.message)}</div>`;
+    setStatus('idle');
+  }
+}
+
+/* ─── Group dropdown ──────────────────────────────────────────────── */
+function populateGroups() {
+  const groups = [...new Set(channels.map(c => c.group).filter(Boolean))].sort();
+  groupFilter.innerHTML = '<option value="">Todos os grupos</option>' +
+    groups.map(g => `<option value="${esc(g)}">${esc(g)}</option>`).join('');
+}
+
+/* ─── Filter ──────────────────────────────────────────────────────── */
+function applyFilters() {
+  const q = searchInput.value.toLowerCase();
+  const g = groupFilter.value;
+  filtered = channels.filter(c =>
+    (!q || c.name.toLowerCase().includes(q) || (c.group || '').toLowerCase().includes(q)) &&
+    (!g || c.group === g)
+  );
+  chScroll.scrollTop = 0;
+  renderVirtual();
+}
+
+/* ─── Virtual list ────────────────────────────────────────────────── */
+let rafPending = false;
+
+function scheduleRender() {
+  if (rafPending) return;
+  rafPending = true;
+  requestAnimationFrame(() => { rafPending = false; renderVirtual(); });
+}
+
+function renderVirtual() {
+  const total = filtered.length;
+  chCount.textContent = total
+    ? `${total.toLocaleString('pt-BR')} canal${total !== 1 ? 'is' : ''}`
+    : '';
+
+  if (!total) {
+    chScroll.innerHTML = '<div class="empty-state">Nenhum canal encontrado</div>';
+    return;
   }
 
-  /* ── Group filter ──────────────────────────────────── */
-  function populateGroups() {
-    const groups = [...new Set(channels.map(c => c.group).filter(Boolean))].sort();
-    groupFilter.innerHTML = '<option value="">Todos os grupos</option>' +
-      groups.map(g => `<option value="${escHtml(g)}">${escHtml(g)}</option>`).join('');
-  }
+  const scrollTop      = chScroll.scrollTop;
+  const visibleH       = chScroll.clientHeight || 600;
+  const totalH         = total * ITEM_H;
+  const BUFFER         = 8;
+  const startIdx       = Math.max(0,       Math.floor(scrollTop / ITEM_H) - BUFFER);
+  const endIdx         = Math.min(total-1, Math.ceil((scrollTop + visibleH) / ITEM_H) + BUFFER);
 
-  /* ── Filter & render ───────────────────────────────── */
-  function applyFilters() {
-    const q = searchInput.value.toLowerCase();
-    const g = groupFilter.value;
-    filtered = channels.filter(c =>
-      (!q || c.name.toLowerCase().includes(q) || (c.group||'').toLowerCase().includes(q)) &&
-      (!g || c.group === g)
-    );
-    renderList();
+  let spacer = chScroll.querySelector('.vlist-spacer');
+  if (!spacer) {
+    chScroll.innerHTML = '<div class="vlist-spacer"></div>';
+    spacer = chScroll.querySelector('.vlist-spacer');
   }
+  spacer.style.height = totalH + 'px';
 
-  function renderList() {
-    channelCount.textContent = `${filtered.length} canal${filtered.length !== 1 ? 'is' : ''} encontrado${filtered.length !== 1 ? 's' : ''}`;
-    if (!filtered.length) {
-      channelList.innerHTML = '<div class="empty-state">Nenhum canal encontrado</div>';
-      return;
+  // Remove items outside window
+  chScroll.querySelectorAll('.channel-item').forEach(el => {
+    const i = +el.dataset.idx;
+    if (i < startIdx || i > endIdx) el.remove();
+  });
+
+  // Render missing items
+  const existing = new Set([...chScroll.querySelectorAll('.channel-item')].map(e => +e.dataset.idx));
+  const frag = document.createDocumentFragment();
+
+  for (let i = startIdx; i <= endIdx; i++) {
+    if (existing.has(i)) {
+      // update active state if needed
+      const el = chScroll.querySelector(`.channel-item[data-idx="${i}"]`);
+      if (el) el.classList.toggle('active', activeIdx === i);
+      continue;
     }
-    channelList.innerHTML = filtered.map((ch, i) => `
-      <div class="channel-item${activeIdx === i ? ' active' : ''}" data-idx="${i}" title="${escHtml(ch.name)}">
-        ${ch.logo
-          ? `<img class="channel-logo" src="${escHtml(ch.logo)}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
-          : ''}
-        <div class="channel-logo-placeholder" style="${ch.logo ? 'display:none' : ''}">${escHtml(ch.name.substring(0,4))}</div>
-        <div class="channel-info">
-          <div class="channel-name">${escHtml(ch.name)}</div>
-          ${ch.group ? `<div class="channel-group">${escHtml(ch.group)}</div>` : ''}
-        </div>
-      </div>`).join('');
+    const ch  = filtered[i];
+    const el  = document.createElement('div');
+    el.className = 'channel-item' + (activeIdx === i ? ' active' : '');
+    el.dataset.idx = i;
+    el.title = ch.name;
+    el.style.top    = (i * ITEM_H) + 'px';
+    el.style.height = ITEM_H + 'px';
 
-    channelList.querySelectorAll('.channel-item').forEach(el => {
-      el.addEventListener('click', () => playChannel(+el.dataset.idx));
-    });
-  }
-
-  /* ── Playback ──────────────────────────────────────── */
-  function playChannel(idx) {
-    if (idx < 0 || idx >= filtered.length) return;
-    activeIdx = idx;
-    const ch = filtered[idx];
-    renderList();
-    scrollToActive();
-    playUrl(ch.url, ch.name);
-  }
-
-  function playUrl(url, label = url) {
-    if (!url) return;
-    overlayMsg.style.display = 'none';
-    npName.textContent = label;
-    npUrl.textContent  = url;
-    setStatus('loading');
-
-    if (hls) { hls.destroy(); hls = null; }
-    video.src = '';
-
-    const isHLS = /\.m3u8/i.test(url) || url.includes('hls') || !url.match(/\.(mp4|ts|mkv|avi|webm)($|\?)/i);
-
-    if (isHLS && Hls.isSupported()) {
-      hls = new Hls({ maxBufferLength: 30, enableWorker: true });
-      hls.loadSource(url);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
-      hls.on(Hls.Events.ERROR, (_, data) => { if (data.fatal) setStatus('error'); });
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = url;
-      video.play().catch(() => {});
+    if (ch.logo) {
+      el.innerHTML = `
+        <img class="ch-logo" src="${esc(ch.logo)}" alt="" loading="lazy"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ch-logo-ph" style="display:none">${esc(ch.name.substring(0,4))}</div>`;
     } else {
-      video.src = url;
-      video.play().catch(() => {});
+      el.innerHTML = `<div class="ch-logo-ph">${esc(ch.name.substring(0,4))}</div>`;
     }
+    el.innerHTML += `
+      <div class="ch-info">
+        <div class="ch-name">${esc(ch.name)}</div>
+        ${ch.group ? `<div class="ch-grp">${esc(ch.group)}</div>` : ''}
+      </div>`;
+
+    el.addEventListener('click', () => playChannel(i));
+    frag.appendChild(el);
   }
 
-  function scrollToActive() {
-    const el = channelList.querySelector('.channel-item.active');
-    if (el) el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  spacer.appendChild(frag);
+}
+
+chScroll.addEventListener('scroll', scheduleRender, { passive: true });
+
+/* ─── Playback ────────────────────────────────────────────────────── */
+function playChannel(idx) {
+  if (idx < 0 || idx >= filtered.length) return;
+  activeIdx = idx;
+  renderVirtual();
+  // Scroll active item into view
+  const top = idx * ITEM_H;
+  const scrollTop = chScroll.scrollTop;
+  const visH = chScroll.clientHeight;
+  if (top < scrollTop || top + ITEM_H > scrollTop + visH) {
+    chScroll.scrollTop = top - visH / 2 + ITEM_H / 2;
   }
+  playUrl(filtered[idx].url, filtered[idx].name);
+}
 
-  /* ── Status indicator ──────────────────────────────── */
-  function setStatus(s) {
-    statusDot.className = 'status-dot' + (s === 'live' ? ' live' : s === 'error' ? ' error' : '');
-    spinner.style.display = s === 'loading' ? 'block' : 'none';
+function playUrl(url, label = url) {
+  if (!url) return;
+  overlayMsg.style.display = 'none';
+  npName.textContent = label;
+  npUrl.textContent  = url;
+  setStatus('loading');
+
+  if (hls) { hls.destroy(); hls = null; }
+  video.src = '';
+
+  const isHLS = /\.m3u8/i.test(url) || /hls/i.test(url) ||
+                !url.match(/\.(mp4|ts|mkv|avi|webm|flv)($|\?)/i);
+
+  if (isHLS && Hls.isSupported()) {
+    hls = new Hls({ maxBufferLength: 30, enableWorker: true });
+    hls.loadSource(url);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+    hls.on(Hls.Events.ERROR, (_, d) => { if (d.fatal) setStatus('error'); });
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = url;
+    video.play().catch(() => {});
+  } else {
+    video.src = url;
+    video.play().catch(() => {});
   }
+}
 
-  video.addEventListener('playing', () => setStatus('live'));
-  video.addEventListener('waiting', () => setStatus('loading'));
-  video.addEventListener('error',   () => setStatus('error'));
-  video.addEventListener('pause',   () => setStatus('idle'));
+/* ─── Status ──────────────────────────────────────────────────────── */
+function setStatus(s) {
+  statusDot.className = 'status-dot' + (s === 'live' ? ' live' : s === 'error' ? ' error' : '');
+  spinner.style.display = s === 'loading' ? 'block' : 'none';
+}
+video.addEventListener('playing', () => setStatus('live'));
+video.addEventListener('waiting', () => setStatus('loading'));
+video.addEventListener('error',   () => setStatus('error'));
+video.addEventListener('pause',   () => setStatus('idle'));
 
-  /* ── Events ────────────────────────────────────────── */
-  loadBtn.addEventListener('click', () => {
-    const url = playlistSel.value;
-    if (url) loadPlaylist(url);
-  });
+/* ─── Events ──────────────────────────────────────────────────────── */
+playlistSel.addEventListener('change', () => { if (playlistSel.value) loadPlaylist(playlistSel.value); });
 
-  playlistSel.addEventListener('change', () => {
-    const url = playlistSel.value;
-    if (url) loadPlaylist(url);
-  });
+loadCustom.addEventListener('click', () => { const u = customUrl.value.trim(); if (u) loadPlaylist(u); });
+customUrl.addEventListener('keydown', e => { if (e.key === 'Enter') loadCustom.click(); });
 
-  loadCustom.addEventListener('click', () => {
-    const url = customUrl.value.trim();
-    if (url) loadPlaylist(url);
-  });
+playStream.addEventListener('click', () => {
+  const u = streamUrl.value.trim();
+  if (u) { activeIdx = -1; playUrl(u, u); }
+});
+streamUrl.addEventListener('keydown', e => { if (e.key === 'Enter') playStream.click(); });
 
-  customUrl.addEventListener('keydown', e => {
-    if (e.key === 'Enter') loadCustom.click();
-  });
+searchInput.addEventListener('input', () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(applyFilters, 220);
+});
+groupFilter.addEventListener('change', applyFilters);
 
-  playStream.addEventListener('click', () => {
-    const url = streamUrl.value.trim();
-    if (url) { activeIdx = -1; playUrl(url, url); }
-  });
+/* ─── Keyboard shortcuts ──────────────────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
+  if (e.key === 'ArrowDown') { e.preventDefault(); playChannel(Math.min(activeIdx + 1, filtered.length - 1)); }
+  if (e.key === 'ArrowUp')   { e.preventDefault(); playChannel(Math.max(activeIdx - 1, 0)); }
+  if (e.key === ' ')         { e.preventDefault(); video.paused ? video.play() : video.pause(); }
+  if (e.key === 'f')         { video.requestFullscreen?.(); }
+  if (e.key === 'm')         { video.muted = !video.muted; }
+});
 
-  streamUrl.addEventListener('keydown', e => {
-    if (e.key === 'Enter') playStream.click();
-  });
+/* ─── Helper ──────────────────────────────────────────────────────── */
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
-  searchInput.addEventListener('input', applyFilters);
-  groupFilter.addEventListener('change', applyFilters);
-
-  /* ── Keyboard shortcuts ────────────────────────────── */
-  document.addEventListener('keydown', e => {
-    if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
-    if (e.key === 'ArrowDown') { e.preventDefault(); playChannel(Math.min(activeIdx + 1, filtered.length - 1)); }
-    if (e.key === 'ArrowUp')   { e.preventDefault(); playChannel(Math.max(activeIdx - 1, 0)); }
-    if (e.key === ' ')         { e.preventDefault(); video.paused ? video.play() : video.pause(); }
-    if (e.key === 'f')         { video.requestFullscreen?.(); }
-    if (e.key === 'm')         { video.muted = !video.muted; }
-  });
-
-  /* ── Helpers ───────────────────────────────────────── */
-  function escHtml(str) {
-    return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  // Auto-load Brazil playlist on start
-  playlistSel.value = 'https://iptv-org.github.io/iptv/countries/br.m3u';
-  loadPlaylist('https://iptv-org.github.io/iptv/countries/br.m3u');
+/* ─── Auto-load: Brasil ───────────────────────────────────────────── */
+playlistSel.value = 'https://iptv-org.github.io/iptv/countries/br.m3u';
+loadPlaylist('https://iptv-org.github.io/iptv/countries/br.m3u');
 </script>
 </body>
 </html>
